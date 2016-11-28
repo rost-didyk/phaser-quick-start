@@ -24,6 +24,10 @@ webpackJsonp([0],[
 
 	var _Game2 = _interopRequireDefault(_Game);
 
+	var _Map = __webpack_require__(14);
+
+	var _Map2 = _interopRequireDefault(_Map);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45,11 +49,12 @@ webpackJsonp([0],[
 
 	    var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, width, height, _phaser2.default.AUTO, 'content', null));
 
-	    _this.state.add('Boot', _Boot2.default, false);
-	    _this.state.add('Splash', _Splash2.default, false);
-	    _this.state.add('Game', _Game2.default, false);
+	    _this.state.add('Map', _Map2.default, false);
+	    //this.state.add('Boot', BootState, false)
+	    //this.state.add('Splash', SplashState, false)
+	    //this.state.add('Game', GameState, false)
 
-	    _this.state.start('Boot');
+	    _this.state.start('Map');
 	    return _this;
 	  }
 
@@ -354,12 +359,95 @@ webpackJsonp([0],[
 	  _createClass(_class, [{
 	    key: 'update',
 	    value: function update() {
-	      this.angle += 5;
+	      this.angle += 2;
 	    }
 	  }]);
 
 	  return _class;
 	}(_phaser2.default.Sprite);
+
+	exports.default = _class;
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _phaser = __webpack_require__(5);
+
+	var _phaser2 = _interopRequireDefault(_phaser);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* globals __DEV__ */
+
+
+	var _class = function (_Phaser$State) {
+	    _inherits(_class, _Phaser$State);
+
+	    function _class() {
+	        _classCallCheck(this, _class);
+
+	        return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
+	    }
+
+	    _createClass(_class, [{
+	        key: 'init',
+	        value: function init() {}
+	    }, {
+	        key: 'preload',
+	        value: function preload() {
+	            this.game.load.tilemap('level', './assets/level/level_map.json', null, _phaser2.default.Tilemap.TILED_JSON);
+	            this.game.load.image('tiles', './assets/level/tile_map.png');
+	            this.game.load.spritesheet('player', './assets/images/betty2.png', 16, 16);
+	        }
+	    }, {
+	        key: 'create',
+	        value: function create() {
+	            this.game.stage.backgroundColor = '#787878';
+
+	            //  The 'mario' key here is the Loader key given in game.load.tilemap
+	            var map = this.game.add.tilemap('level');
+
+	            //  The first parameter is the tileset name, as specified in the Tiled map editor (and in the tilemap json file)
+	            //  The second parameter maps this name to the Phaser.Cache key 'tiles'
+	            map.addTilesetImage('tile_map', 'tiles');
+
+	            //  Creates a layer from the World1 layer in the map data.
+	            //  A Layer is effectively like a Phaser.Sprite, so is added to the display list.
+	            var layer = map.createLayer('Tile Layer 1');
+
+	            //  This resizes the game world to match the layer dimensions
+	            layer.resizeWorld();
+
+	            var player = game.add.sprite(48, 48, 'player', 1);
+	            player.animations.add('left', [8, 9], 10, true);
+	            player.animations.add('right', [1, 2], 10, true);
+	            player.animations.add('up', [11, 12, 13], 10, true);
+	            player.animations.add('down', [4, 5, 6], 10, true);
+
+	            game.physics.enable(player, _phaser2.default.Physics.ARCADE);
+
+	            player.body.setSize(10, 14, 2, 1);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {}
+	    }]);
+
+	    return _class;
+	}(_phaser2.default.State);
 
 	exports.default = _class;
 
