@@ -36,7 +36,7 @@ webpackJsonp([0],[
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	console.log('Test_test');
+	console.log('Test_test3');
 
 	var Game = function (_Phaser$Game) {
 	  _inherits(Game, _Phaser$Game);
@@ -44,8 +44,8 @@ webpackJsonp([0],[
 	  function Game() {
 	    _classCallCheck(this, Game);
 
-	    var width = document.documentElement.clientWidth > 1024 ? 1024 : document.documentElement.clientWidth;
-	    var height = document.documentElement.clientHeight > 1024 ? 1024 : document.documentElement.clientHeight;
+	    var width = 480;
+	    var height = 416;
 
 	    var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, width, height, _phaser2.default.AUTO, 'content', null));
 
@@ -410,36 +410,49 @@ webpackJsonp([0],[
 	        value: function preload() {
 	            this.game.load.tilemap('level', './assets/level/level_map.json', null, _phaser2.default.Tilemap.TILED_JSON);
 	            this.game.load.image('tiles', './assets/level/tile_map.png');
-	            this.game.load.spritesheet('player', './assets/images/betty2.png', 16, 16);
+	            this.game.load.spritesheet('player', './assets/images/boy.png', 30, 30);
 	        }
 	    }, {
 	        key: 'create',
 	        value: function create() {
+	            this.game.physics.startSystem(_phaser2.default.Physics.ARCADE);
+
 	            this.game.stage.backgroundColor = '#787878';
 
-	            //  The 'mario' key here is the Loader key given in game.load.tilemap
 	            var map = this.game.add.tilemap('level');
-
-	            //  The first parameter is the tileset name, as specified in the Tiled map editor (and in the tilemap json file)
-	            //  The second parameter maps this name to the Phaser.Cache key 'tiles'
 	            map.addTilesetImage('tile_map', 'tiles');
+	            map.setCollision([2]);
+	            map.setCollisionByExclusion([1]);
 
-	            //  Creates a layer from the World1 layer in the map data.
-	            //  A Layer is effectively like a Phaser.Sprite, so is added to the display list.
-	            var layer = map.createLayer('Tile Layer 1');
+	            this.layer = map.createLayer('Tile Layer 1');
+	            this.layer.resizeWorld();
 
-	            //  This resizes the game world to match the layer dimensions
-	            layer.resizeWorld();
+	            this.player = game.add.sprite(32, 32, 'player');
+	            this.game.physics.enable(this.player, _phaser2.default.Physics.ARCADE);
 
-	            var player = game.add.sprite(48, 48, 'player', 1);
-	            player.animations.add('left', [8, 9], 10, true);
-	            player.animations.add('right', [1, 2], 10, true);
-	            player.animations.add('up', [11, 12, 13], 10, true);
-	            player.animations.add('down', [4, 5, 6], 10, true);
+	            this.player.body.bounce.y = 0.2;
+	            this.player.body.collideWorldBounds = true;
 
-	            game.physics.enable(player, _phaser2.default.Physics.ARCADE);
+	            this.cursors = this.game.input.keyboard.createCursorKeys();
+	        }
+	    }, {
+	        key: 'update',
+	        value: function update() {
+	            this.game.physics.arcade.collide(this.player, this.layer);
+	            this.game.physics.arcade.overlap(this.player, this.layer);
 
-	            player.body.setSize(10, 14, 2, 1);
+	            if (this.cursors.left.isDown) {
+	                this.player.body.velocity.x = -100;
+	            } else if (this.cursors.right.isDown) {
+	                this.player.body.velocity.x = 100;
+	            } else if (this.cursors.up.isDown) {
+	                this.player.body.velocity.y = -100;
+	            } else if (this.cursors.down.isDown) {
+	                this.player.body.velocity.y = 100;
+	            } else {
+	                this.player.body.velocity.x = 0;
+	                this.player.body.velocity.y = 0;
+	            }
 	        }
 	    }, {
 	        key: 'render',

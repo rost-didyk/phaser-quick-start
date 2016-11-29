@@ -7,13 +7,13 @@ import SplashState from './states/Splash'
 import GameState from './states/Game'
 import MapState from './states/Map'
 
-    console.log('Test_test');
+    console.log('Test_test3');
 
 class Game extends Phaser.Game {
 
   constructor () {
-    let width = document.documentElement.clientWidth > 1024 ? 1024 : document.documentElement.clientWidth
-    let height = document.documentElement.clientHeight > 1024 ? 1024 : document.documentElement.clientHeight
+    let width = 480;
+    let height = 416;
 
     super(width, height, Phaser.AUTO, 'content', null)
 
